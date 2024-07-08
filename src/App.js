@@ -6,6 +6,8 @@ import ScoreBoard from "./components/ScoreBoard";
 import UserInput from "./components/UserInput";
 import axios from "axios";
 
+const API_URL = "https://snakegame-backend.onrender.com";
+
 function App() {
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState({ playerName: "", score: 0 });
@@ -15,7 +17,7 @@ function App() {
   useEffect(() => {
     const fetchHighScore = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/highscore');
+        const response = await axios.get(`${API_URL}/highscore`);
         if (response.data) {
           setHighScore(response.data);
         }
@@ -28,7 +30,7 @@ function App() {
 
   const handleResetHighScore = async () => {
     try {
-      await axios.post('http://localhost:5000/highscore', { playerName: "", score: 0 });
+      await axios.post(`${API_URL}/highscore`, { playerName: "", score: 0 });
       setHighScore({ playerName: "", score: 0 });
     } catch (error) {
       console.error('Error resetting high score:', error);
@@ -38,7 +40,7 @@ function App() {
   const updateHighScore = async (finalScore) => {
     if (finalScore > highScore.score) {
       try {
-        await axios.post('http://localhost:5000/highscore', { playerName, score: finalScore });
+        await axios.post(`${API_URL}/highscore`, { playerName, score: finalScore });
         setHighScore({ playerName, score: finalScore });
       } catch (error) {
         console.error('Error updating high score:', error);
@@ -49,6 +51,7 @@ function App() {
   const startGame = () => {
     setGameStarted(true);
   };
+
   const resetUser = () => {
     setPlayerName("");
     setGameStarted(false);
@@ -66,7 +69,6 @@ function App() {
             setScore={setScore}
             onGameOver={updateHighScore}
             onResetUser={resetUser}
-
           />
           <ScoreBoard
             score={score}
