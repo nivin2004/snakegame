@@ -7,7 +7,6 @@ import UserInput from "./components/UserInput";
 import axios from "axios";
 
 const API_URL = "https://snakegame-backend.onrender.com";
-const WS_URL = "wss://snakegame-backend.onrender.com"; // Change to your WebSocket URL
 
 function App() {
   const [score, setScore] = useState(0);
@@ -27,17 +26,6 @@ function App() {
       }
     };
     fetchHighScore();
-
-    const ws = new WebSocket(WS_URL);
-
-    ws.onmessage = (event) => {
-      const newHighScore = JSON.parse(event.data);
-      setHighScore(newHighScore);
-    };
-
-    return () => {
-      ws.close();
-    };
   }, []);
 
   const handleResetHighScore = async () => {
