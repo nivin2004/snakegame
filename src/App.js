@@ -53,8 +53,7 @@ function App() {
   };
 
   const resetUser = () => {
-    setPlayerName("");
-    setGameStarted(false);
+    window.location.reload();
   };
 
   return (
