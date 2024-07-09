@@ -9,13 +9,17 @@ const initialApple = [14, 10];
 const scale = 50;
 const timeDelay = 100;
 
-const SnakeGame = ({ score, setScore, onGameOver ,onResetUser}) => {
+const SnakeGame = ({ score, setScore, onGameOver, onResetUser }) => {
   const canvasRef = useRef(null);
   const [snake, setSnake] = useState(initialSnake);
   const [apple, setApple] = useState(initialApple);
   const [direction, setDirection] = useState([0, -1]);
   const [delay, setDelay] = useState(null);
   const [gameOver, setGameOver] = useState(false);
+
+  // Load sounds
+  const eatSound = new Audio("/sounds/food.wav");
+  const gameOverSound = new Audio("/sounds/gameover.mp3");
 
   useInterval(() => runGame(), delay);
 
@@ -59,6 +63,7 @@ const SnakeGame = ({ score, setScore, onGameOver ,onResetUser}) => {
       let newApple = coord;
       setScore(score + 1);
       setApple(newApple);
+      eatSound.play();  // Play eat sound
       return true;
     }
     return false;
@@ -72,6 +77,7 @@ const SnakeGame = ({ score, setScore, onGameOver ,onResetUser}) => {
       setDelay(null);
       setGameOver(true);
       onGameOver(score);
+      gameOverSound.play();  // Play game over sound
     }
     if (!appleAte(newSnake)) {
       newSnake.pop();
@@ -82,21 +88,30 @@ const SnakeGame = ({ score, setScore, onGameOver ,onResetUser}) => {
   const changeDirection = (e) => {
     switch (e.key) {
       case "ArrowLeft":
-        setDirection([-1, 0]);
+        if (direction[0] === 0) {
+          setDirection([-1, 0]);
+        }
         break;
       case "ArrowUp":
-        setDirection([0, -1]);
+        if (direction[1] === 0) {
+          setDirection([0, -1]);
+        }
         break;
       case "ArrowRight":
-        setDirection([1, 0]);
+        if (direction[0] === 0) {
+          setDirection([1, 0]);
+        }
         break;
       case "ArrowDown":
-        setDirection([0, 1]);
+        if (direction[1] === 0) {
+          setDirection([0, 1]);
+        }
         break;
       default:
         break;
     }
   };
+
 
   return (
     <div onKeyDown={(e) => changeDirection(e)}>
